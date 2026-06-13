@@ -1,22 +1,21 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useAccount, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 
 export default function Home() {
-  const { isConnected, address } = useAccount();
+  const { isConnected } = useAccount();
   const [lang, setLang] = useState('TR');
-  const [timeLeft, setTimeLeft] = useState('00:00:00');
+  const [timeLeft] = useState('00:00:00');
   
   const { writeContractAsync, isPending } = useWriteContract();
   const [hash, setHash] = useState<`0x${string}` | undefined>();
-  const { isSuccess: isConfirmed } = useWaitForTransactionReceipt({ hash });
 
   const handleCheckIn = async () => {
     try {
       const txHash = await writeContractAsync({
-        address: '0x000...', // Buraya Kendi Kontrat Adresini Yaz
+        address: '0x7179047321526685D3B294f31527027581699990',
         abi: [{ name: 'checkIn', type: 'function', stateMutability: 'nonpayable', inputs: [], outputs: [] }],
         functionName: 'checkIn',
       });
