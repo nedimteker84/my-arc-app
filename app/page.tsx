@@ -1,32 +1,39 @@
 'use client';
 
 import { ConnectButton } from '@rainbow-me/rainbowkit';
-import { useAccount, useBalance, useBlockNumber } from 'wagmi';
+import { useAccount } from 'wagmi';
 
 export default function Home() {
-  const { address, isConnected } = useAccount();
-  const { data: balance } = useBalance({ address });
-  const { data: blockNumber } = useBlockNumber({ watch: true });
+  const { isConnected } = useAccount();
 
   return (
-    <main style={{ padding: '40px', fontFamily: 'sans-serif', textAlign: 'center' }}>
-      <h1>Arc MiniApp</h1>
-      
-      <div style={{ margin: '20px 0' }}>
+    <main style={{ backgroundColor: '#0f172a', color: 'white', minHeight: '100vh', padding: '40px', fontFamily: 'sans-serif' }}>
+      <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '40px' }}>
+        <h1>Arc OnChain</h1>
         <ConnectButton />
-      </div>
+      </header>
 
-      {isConnected && (
-        <div style={{ marginTop: '30px', border: '1px solid #ccc', padding: '20px', borderRadius: '10px' }}>
-          <h2>Hoş Geldin!</h2>
-          <p><strong>Cüzdan:</strong> {address}</p>
-          <p><strong>Bakiye:</strong> {balance?.formatted} {balance?.symbol}</p>
-          <p><strong>Güncel İşlem Sayısı (Blok):</strong> {blockNumber?.toString()}</p>
+      {isConnected ? (
+        <section style={{ maxWidth: '600px', margin: '0 auto', backgroundColor: '#1e293b', padding: '30px', borderRadius: '16px' }}>
+          <h2>Arc Testnet</h2>
+          <p style={{ color: '#94a3b8' }}>GM Ritual</p>
           
-          <div style={{ marginTop: '20px' }}>
-            <button onClick={() => alert('GM!')} style={{ marginRight: '10px', padding: '10px' }}>GM</button>
-            <button onClick={() => alert('GN!')} style={{ padding: '10px' }}>GN</button>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginTop: '30px' }}>
+            <button style={{ padding: '15px', borderRadius: '8px', border: 'none', backgroundColor: '#3b82f6', color: 'white', cursor: 'pointer' }}>
+              GM on Arc
+            </button>
+            <button style={{ padding: '15px', borderRadius: '8px', border: 'none', backgroundColor: '#10b981', color: 'white', cursor: 'pointer' }}>
+              Deploy on Arc
+            </button>
           </div>
+          
+          <div style={{ marginTop: '30px', textAlign: 'center', color: '#f59e0b' }}>
+            <p>Sonraki GM: 04h 27m</p>
+          </div>
+        </section>
+      ) : (
+        <div style={{ textAlign: 'center', marginTop: '100px' }}>
+          <p>Lütfen devam etmek için cüzdanınızı bağlayın.</p>
         </div>
       )}
     </main>
