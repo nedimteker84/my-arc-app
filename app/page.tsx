@@ -13,22 +13,16 @@ export default function Home() {
   const { writeContract, data: hash, isPending } = useWriteContract();
   const { isSuccess: isConfirmed } = useWaitForTransactionReceipt({ hash });
 
-  // İşlem onaylandığı an geri sayımı tetikle
   useEffect(() => {
-    if (isConfirmed) {
-      setLastCheckIn(Date.now());
-    }
+    if (isConfirmed) setLastCheckIn(Date.now());
   }, [isConfirmed]);
 
-  // 24 saatlik geri sayım mantığı
   useEffect(() => {
     if (!lastCheckIn) return;
     const interval = setInterval(() => {
       const remaining = 86400000 - (Date.now() - lastCheckIn);
-      if (remaining <= 0) {
-        setTimeLeft('00:00:00');
-        clearInterval(interval);
-      } else {
+      if (remaining <= 0) { setTimeLeft('00:00:00'); clearInterval(interval); }
+      else {
         const h = Math.floor(remaining / 3600000);
         const m = Math.floor((remaining % 3600000) / 60000);
         const s = Math.floor((remaining % 60000) / 1000);
@@ -42,7 +36,7 @@ export default function Home() {
     <main style={{ background: '#050505', color: '#fff', minHeight: '100vh', padding: '20px', fontFamily: 'Inter' }}>
       <nav style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', maxWidth: '800px', margin: '0 auto' }}>
         <h1 style={{ fontSize: '1.2rem' }}>Arc OnChain</h1>
-        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+        <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
           <button onClick={() => setLang(lang === 'TR' ? 'EN' : 'TR')} style={{ background: '#111', border: '1px solid #333', color: '#fff', padding: '5px 12px', borderRadius: '8px', cursor: 'pointer' }}>{lang}</button>
           <ConnectButton />
         </div>
@@ -57,8 +51,8 @@ export default function Home() {
             <button 
               disabled={isPending || (lastCheckIn !== null && timeLeft !== '00:00:00')}
               onClick={() => writeContract({ 
-                address: '0x000...', // Buraya kendi kontrat adresini gir
-                abi: [{ name: 'checkIn', type: 'function', stateMutability: 'nonpayable', inputs: [] }],
+                address: '0x000...', // BURAYA KONTRA ADRESİNİ YAZ
+                abi: [{ name: 'checkIn', type: 'function', stateMutability: 'nonpayable', inputs: [], outputs: [] }],
                 functionName: 'checkIn' 
               })}
               style={{ width: '100%', padding: '16px', margin: '20px 0', borderRadius: '12px', border: 'none', background: '#fff', color: '#000', fontWeight: 'bold', cursor: 'pointer' }}

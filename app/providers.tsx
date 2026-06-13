@@ -16,7 +16,7 @@ const arcTestnet = defineChain({
 
 const config = getDefaultConfig({
   appName: 'Arc OnChain',
-  projectId: 'SENIN_PROJECT_ID',
+  projectId: 'YOUR_PROJECT_ID', // WalletConnect projenin ID'sini buraya yaz
   chains: [arcTestnet],
   ssr: true,
 });
