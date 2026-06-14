@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { useWriteContract } from 'wagmi';
 
-// Adresi küçük harflerle tanımladık (Checksum hatası için)
 const CONTRACT_ADDRESS = '0x7179047321526685d3b294f31527027581699990' as `0x${string}`;
 
 export default function Home() {
@@ -12,15 +11,15 @@ export default function Home() {
 
   const handleCheckIn = async () => {
     try {
-      const txHash = await writeContractAsync({
+      await writeContractAsync({
         address: CONTRACT_ADDRESS,
         abi: [{ name: 'checkIn', type: 'function', stateMutability: 'nonpayable', inputs: [], outputs: [] }],
         functionName: 'checkIn',
       });
       alert(lang === 'TR' ? 'İşlem başarılı!' : 'Transaction successful!');
     } catch (err) {
-      console.error('İşlem hatası:', err);
-      alert(lang === 'TR' ? 'İşlem reddedildi veya hata oluştu.' : 'Transaction rejected or failed.');
+      console.error('Hata:', err);
+      alert(lang === 'TR' ? 'İşlem reddedildi veya hata oluştu.' : 'Transaction failed.');
     }
   };
 
