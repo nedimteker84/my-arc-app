@@ -1,57 +1,45 @@
 'use client';
 
 import { useState } from 'react';
-import { ConnectButton } from '@rainbow-me/rainbowkit';
-import { useAccount, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
+import { useWriteContract } from 'wagmi';
+
+// Adresi küçük harflerle tanımladık (Checksum hatası için)
+const CONTRACT_ADDRESS = '0x7179047321526685d3b294f31527027581699990' as `0x${string}`;
 
 export default function Home() {
-  const { isConnected } = useAccount();
   const [lang, setLang] = useState('TR');
-  const [timeLeft] = useState('00:00:00');
-  
-  const { writeContractAsync, isPending } = useWriteContract();
-  const [hash, setHash] = useState<`0x${string}` | undefined>();
+  const { writeContractAsync } = useWriteContract();
 
   const handleCheckIn = async () => {
     try {
       const txHash = await writeContractAsync({
-        address: '0x7179047321526685D3B294f31527027581699990',
+        address: CONTRACT_ADDRESS,
         abi: [{ name: 'checkIn', type: 'function', stateMutability: 'nonpayable', inputs: [], outputs: [] }],
         functionName: 'checkIn',
       });
-      setHash(txHash);
+      alert(lang === 'TR' ? 'İşlem başarılı!' : 'Transaction successful!');
     } catch (err) {
-      console.error("İşlem hatası:", err);
-      alert("İşlem reddedildi veya hata oluştu.");
+      console.error('İşlem hatası:', err);
+      alert(lang === 'TR' ? 'İşlem reddedildi veya hata oluştu.' : 'Transaction rejected or failed.');
     }
   };
 
   return (
-    <main style={{ background: '#050505', color: '#fff', minHeight: '100vh', padding: '20px', fontFamily: 'Inter' }}>
-      <nav style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', maxWidth: '800px', margin: '0 auto' }}>
-        <h1>Arc OnChain</h1>
-        <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
-          <button onClick={() => setLang(lang === 'TR' ? 'EN' : 'TR')} style={{ background: '#111', border: '1px solid #333', padding: '5px 12px', borderRadius: '8px', cursor: 'pointer' }}>{lang}</button>
-          <ConnectButton />
-        </div>
-      </nav>
+    <main style={{ background: '#050505', color: '#fff', minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+      <div style={{ position: 'absolute', top: 20, right: 20 }}>
+        <button onClick={() => setLang(lang === 'TR' ? 'EN' : 'TR')} style={{ padding: '5px 15px', cursor: 'pointer' }}>
+          {lang}
+        </button>
+      </div>
 
-      <section style={{ maxWidth: '400px', margin: '80px auto', background: '#0a0a0a', padding: '30px', borderRadius: '20px', border: '1px solid #222', textAlign: 'center' }}>
-        {!isConnected ? (
-          <p>{lang === 'TR' ? 'Lütfen cüzdanınızı bağlayın' : 'Please connect your wallet'}</p>
-        ) : (
-          <div>
-            <button 
-              disabled={isPending}
-              onClick={handleCheckIn}
-              style={{ width: '100%', padding: '16px', borderRadius: '12px', border: 'none', background: '#fff', color: '#000', fontWeight: 'bold', cursor: 'pointer' }}
-            >
-              {isPending ? 'Cüzdanda Onayla...' : 'Check-in'}
-            </button>
-            <p style={{ marginTop: '20px', color: '#666' }}>{timeLeft}</p>
-          </div>
-        )}
-      </section>
+      <h1 style={{ marginBottom: '40px' }}>Arc OnChain</h1>
+      
+      <button 
+        onClick={handleCheckIn}
+        style={{ padding: '20px 60px', fontSize: '20px', cursor: 'pointer', borderRadius: '10px' }}
+      >
+        {lang === 'TR' ? 'Check-in Yap' : 'Check-in'}
+      </button>
     </main>
   );
 }
